@@ -3,8 +3,8 @@
   "version": 1,
   "provideNativeLibs": [
     "libandroidio.so",
-    "libdexfile_external.so",
-    "libdexfiled_external.so",
+    "libdexfile.so",
+    "libdexfiled.so",
     "libnativebridge.so",
     "libnativehelper.so",
     "libnativeloader.so"
