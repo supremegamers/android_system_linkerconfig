@@ -32,8 +32,8 @@
     "libselinux.so"
   ],
   "requireLibs": [
-    "libdexfile.so",
-    "libdexfiled.so",
+    "libdexfile_external.so",
+    "libdexfiled_external.so",
     "libnativebridge.so",
     "libnativehelper.so",
     "libnativeloader.so",
