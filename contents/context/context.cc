@@ -93,21 +93,6 @@ bool Context::IsVndkAvailable() const {
   return false;
 }
 
-void Context::RegisterApexNamespaceBuilder(const std::string& name,
-                                           ApexNamespaceBuilder builder) {
-  builders_[name] = builder;
-}
-
-Namespace Context::BuildApexNamespace(const ApexInfo& apex_info,
-                                      bool visible) const {
-  auto builder = builders_.find(apex_info.name);
-  if (builder != builders_.end()) {
-    return builder->second(*this, apex_info, visible);
-  }
-
-  return BaseContext::BuildApexNamespace(apex_info, visible);
-}
-
 std::string Var(const std::string& name) {
   auto val = modules::Variables::GetValue(name);
   if (val.has_value()) {
