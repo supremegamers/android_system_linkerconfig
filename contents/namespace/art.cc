@@ -36,12 +36,6 @@ Namespace BuildArtNamespace([[maybe_unused]] const Context& ctx,
                /*is_visible=*/!ctx.IsVendorSection());
   InitializeWithApex(ns, apex);
 
-  // Need allow_all_shared_libs to let libart.so dlopen oat files in
-  // /system/framework and /data.
-  // TODO(b/130340935): Use a dynamically created linker namespace similar to
-  // classloader-namespace for oat files, and tighten this up.
-  ns.GetLink(ctx.GetSystemNamespaceName()).AllowAllSharedLibs();
-
   return ns;
 }
 
