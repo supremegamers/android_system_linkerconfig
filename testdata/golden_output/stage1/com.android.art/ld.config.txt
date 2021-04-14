@@ -2,9 +2,14 @@ dir.com.android.art = /apex/com.android.art/bin
 [com.android.art]
 additional.namespaces = com_android_art,com_android_i18n,com_android_runtime,system
 namespace.default.isolated = true
-namespace.default.links = com_android_art,system
+namespace.default.links = com_android_art,system,com_android_i18n
 namespace.default.link.com_android_art.allow_all_shared_libs = true
 namespace.default.link.system.allow_all_shared_libs = true
+namespace.default.link.com_android_i18n.shared_libs = libandroidicu.so
+namespace.default.link.com_android_i18n.shared_libs += libicu.so
+namespace.default.link.com_android_i18n.shared_libs += libicu_jni.so
+namespace.default.link.com_android_i18n.shared_libs += libicui18n.so
+namespace.default.link.com_android_i18n.shared_libs += libicuuc.so
 namespace.com_android_art.isolated = true
 namespace.com_android_art.visible = true
 namespace.com_android_art.search.paths = /apex/com.android.art/${LIB}
