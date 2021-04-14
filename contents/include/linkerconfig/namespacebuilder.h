@@ -54,7 +54,8 @@ modules::Namespace BuildApexDefaultNamespace(const Context& ctx,
 modules::Namespace BuildApexEmptyDefaultNamespace(
     const Context& ctx, const modules::ApexInfo& apex_info);
 NamespaceBuilder BuildApexPlatformNamespace;
-NamespaceBuilder BuildApexArtDefaultNamespace;
+modules::Namespace BuildApexArtDefaultNamespace(
+    const Context& ctx, const modules::ApexInfo& apex_info);
 
 void RegisterApexNamespaceBuilders(Context& ctx);
 }  // namespace contents

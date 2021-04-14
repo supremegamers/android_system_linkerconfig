@@ -17,12 +17,14 @@
 
 #include "linkerconfig/namespace.h"
 
+using android::linkerconfig::modules::ApexInfo;
 using android::linkerconfig::modules::Namespace;
 
 namespace android {
 namespace linkerconfig {
 namespace contents {
-Namespace BuildApexArtDefaultNamespace([[maybe_unused]] const Context& ctx) {
+Namespace BuildApexArtDefaultNamespace([[maybe_unused]] const Context& ctx,
+                                       const ApexInfo& apex_info) {
   Namespace ns("default", /*is_isolated=*/true, /*is_visible=*/false);
 
   // The default namespace here only links to other namespaces, in particular
@@ -30,7 +32,7 @@ Namespace BuildApexArtDefaultNamespace([[maybe_unused]] const Context& ctx) {
   // "art" also need to be present here.
   ns.GetLink("com_android_art").AllowAllSharedLibs();
   ns.GetLink("system").AllowAllSharedLibs();
-  ns.AddRequires(std::vector{"libadbconnection_client.so"});
+  ns.AddRequires(apex_info.require_libs);
 
   return ns;
 }

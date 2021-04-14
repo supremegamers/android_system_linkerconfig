@@ -2,10 +2,16 @@ dir.com.android.art = /apex/com.android.art/bin
 [com.android.art]
 additional.namespaces = com_android_adbd,com_android_art,com_android_conscrypt,com_android_cronet,com_android_i18n,com_android_media,com_android_neuralnetworks,com_android_os_statsd,com_android_resolv,com_android_runtime,system
 namespace.default.isolated = true
-namespace.default.links = com_android_art,system,com_android_adbd
+namespace.default.links = com_android_art,system,com_android_adbd,com_android_i18n,com_android_neuralnetworks
 namespace.default.link.com_android_art.allow_all_shared_libs = true
 namespace.default.link.system.allow_all_shared_libs = true
 namespace.default.link.com_android_adbd.shared_libs = libadbconnection_client.so
+namespace.default.link.com_android_i18n.shared_libs = libandroidicu.so
+namespace.default.link.com_android_i18n.shared_libs += libicu.so
+namespace.default.link.com_android_i18n.shared_libs += libicu_jni.so
+namespace.default.link.com_android_i18n.shared_libs += libicui18n.so
+namespace.default.link.com_android_i18n.shared_libs += libicuuc.so
+namespace.default.link.com_android_neuralnetworks.shared_libs = libneuralnetworks.so
 namespace.com_android_adbd.isolated = true
 namespace.com_android_adbd.search.paths = /apex/com.android.adbd/${LIB}
 namespace.com_android_adbd.permitted.paths = /apex/com.android.adbd/${LIB}

@@ -34,7 +34,7 @@ Section BuildApexArtSection(Context& ctx, const ApexInfo& apex_info) {
 
   ctx.SetCurrentSection(SectionType::Other);
 
-  namespaces.emplace_back(BuildApexArtDefaultNamespace(ctx));
+  namespaces.emplace_back(BuildApexArtDefaultNamespace(ctx, apex_info));
   namespaces.emplace_back(BuildApexPlatformNamespace(ctx));
   namespaces.emplace_back(BuildArtNamespace(ctx, apex_info));
 
