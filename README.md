@@ -17,8 +17,16 @@ TODO: explain inputs (e.g. /system/etc/public.libraries.txt,
 
 Linker configuration file can be used to add extra information while linkerconfig
 creates linker configuration with the module. This module can be defined as
-'linker_config' from Soong, and it will be translated as protobuf file at build
+`linker_config` from Soong, and it will be translated as protobuf file at build
 time.
+
+A linker configuration file(linker.config.json) is compiled into a protobuf at build time
+by `conv_linker_config`. You can find the compiled file under `<base>/etc/linker.config.pb`.
+For example, `/apex/com.android.art/etc/linker.config.pb` is a configuration for the `com.android.art`
+APEX.
+
+`/system/etc/linker.config.pb`(or its source module `system_linker_config`) is special because
+its `provideLibs` key is generated at build time.
 
 #### Format
 
