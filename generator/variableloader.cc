@@ -80,6 +80,7 @@ void LoadVndkLibraryListVariables(const std::string& root,
   const std::string vndk_path = root + "/apex/com.android.vndk.v" + vndk_version;
   // Skip loading if VNDK APEX is not available
   if (::access(vndk_path.c_str(), F_OK) != 0) {
+    PLOG(ERROR) << "Unable to access VNDK APEX at path: " << vndk_path;
     return;
   }
   const std::string llndk_libraries_path =
