@@ -36,7 +36,7 @@ Section BuildApexArtSection(Context& ctx, const ApexInfo& apex_info) {
 
   namespaces.emplace_back(BuildApexArtDefaultNamespace(ctx, apex_info));
   namespaces.emplace_back(BuildApexPlatformNamespace(ctx));
-  namespaces.emplace_back(BuildArtNamespace(ctx, apex_info));
+  namespaces.emplace_back(BuildArtNamespace(ctx, apex_info, false));
 
   std::set<std::string> visible_apexes;
 
