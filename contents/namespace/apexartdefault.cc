@@ -31,7 +31,6 @@ Namespace BuildApexArtDefaultNamespace([[maybe_unused]] const Context& ctx,
   // "art" where the real library loading takes place. Any outgoing links from
   // "art" also need to be present here.
   ns.GetLink("com_android_art").AllowAllSharedLibs();
-  ns.GetLink("system").AllowAllSharedLibs();
   ns.AddRequires(apex_info.require_libs);
 
   return ns;
