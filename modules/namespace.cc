@@ -30,8 +30,7 @@ Result<void> VerifyIfApexNamespaceContainsAllSharedLink(
     const android::linkerconfig::modules::Namespace& ns) {
   auto apex_name = ns.GetApexSource();
   // If namespace is not from APEX there is no need to check this.
-  // TODO(b/130340935): Also do not allow all shared links from ART APEX.
-  if (apex_name == "" || apex_name == "com.android.art") {
+  if (apex_name == "") {
     return {};
   }
 
