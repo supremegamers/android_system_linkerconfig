@@ -43,16 +43,32 @@ namespace contents {
 //   namespace.default....
 //   namespace.system...
 Section BuildApexDefaultSection(Context& ctx, const ApexInfo& apex_info) {
-  std::vector<Namespace> namespaces;
-
   ctx.SetCurrentSection(SectionType::Other);
 
+  bool target_apex_visible = apex_info.visible;
+  std::set<std::string> visible_apexes;
+  if (apex_info.name == "com.android.art") {
+    // ld.config.txt for the ART module needs to have the namespaces with public
+    // and JNI libs visible since it runs dalvikvm and hence libnativeloader,
+    // which builds classloader namespaces that may link to those libs.
+    for (const auto& apex : ctx.GetApexModules()) {
+      if (apex.jni_libs.size() > 0 || apex.public_libs.size() > 0) {
+        visible_apexes.insert(apex.name);
+        if (apex.name == apex_info.name) {
+          target_apex_visible = true;
+        }
+      }
+    }
+  }
+
+  std::vector<Namespace> namespaces;
+
   // If target APEX should be visible, then there will be two namespaces -
-  // default and APEX namespace - with same set of library. To avoid any
+  // default and APEX namespace - with same set of libraries. To avoid any
   // confusion based on two same namespaces, and also to avoid loading same
   // library twice based on the namespace, use empty default namespace which
   // does not contain any search path and fully links to visible APEX namespace.
-  if (apex_info.visible) {
+  if (target_apex_visible) {
     namespaces.emplace_back(BuildApexEmptyDefaultNamespace(ctx, apex_info));
   } else {
     namespaces.emplace_back(BuildApexDefaultNamespace(ctx, apex_info));
@@ -90,8 +106,9 @@ Section BuildApexDefaultSection(Context& ctx, const ApexInfo& apex_info) {
         {Var("VNDK_SAMEPROCESS_LIBRARIES_" + user_partition_suffix)},
     };
   }
+
   return BuildSection(
-      ctx, apex_info.name, std::move(namespaces), {}, libs_providers);
+      ctx, apex_info.name, std::move(namespaces), visible_apexes, libs_providers);
 }
 
 }  // namespace contents

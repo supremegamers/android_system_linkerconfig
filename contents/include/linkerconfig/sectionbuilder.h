@@ -47,7 +47,6 @@ SectionBuilder BuildPostInstallSection;
 SectionBuilder BuildRecoverySection;
 SectionBuilder BuildIsolatedSection;
 ApexSectionBuilder BuildApexDefaultSection;
-ApexSectionBuilder BuildApexArtSection;
 }  // namespace contents
 }  // namespace linkerconfig
 }  // namespace android

@@ -201,7 +201,6 @@ Context GetContext(ProgramArgs args) {
     } else {
       LOG(ERROR) << "Failed to scan APEX modules : " << apex_list.error();
     }
-    android::linkerconfig::contents::RegisterApexNamespaceBuilders(ctx);
   }
 
   std::string system_config_path = args.root + "/system/etc/linker.config.pb";
