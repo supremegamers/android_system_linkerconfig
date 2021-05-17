@@ -27,8 +27,8 @@ namespace linkerconfig {
 namespace contents {
 
 class Context;
-using ApexNamespaceBuilder =
-    std::function<modules::Namespace(const Context&, const modules::ApexInfo&)>;
+using ApexNamespaceBuilder = std::function<modules::Namespace(
+    const Context&, const modules::ApexInfo&, bool)>;
 
 enum class SectionType {
   System,
