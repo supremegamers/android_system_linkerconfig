@@ -102,7 +102,7 @@ Namespace Context::BuildApexNamespace(const ApexInfo& apex_info,
                                       bool visible) const {
   auto builder = builders_.find(apex_info.name);
   if (builder != builders_.end()) {
-    return builder->second(*this, apex_info);
+    return builder->second(*this, apex_info, visible);
   }
 
   return BaseContext::BuildApexNamespace(apex_info, visible);
