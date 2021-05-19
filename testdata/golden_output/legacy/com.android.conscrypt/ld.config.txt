@@ -40,7 +40,6 @@ namespace.com_android_adbd.link.system.shared_libs += libdl_android.so
 namespace.com_android_adbd.link.system.shared_libs += libm.so
 namespace.com_android_adbd.link.system.shared_libs += libclang_rt.asan-arm-android.so:libclang_rt.asan-i686-android.so:libclang_rt.hwasan-arm-android.so:libclang_rt.hwasan-i686-android.so:libclang_rt.tsan-arm-android.so:libclang_rt.tsan-i686-android.so:libclang_rt.ubsan_standalone-arm-android.so:libclang_rt.ubsan_standalone-i686-android.so
 namespace.com_android_art.isolated = true
-namespace.com_android_art.visible = true
 namespace.com_android_art.search.paths = /apex/com.android.art/${LIB}
 namespace.com_android_art.permitted.paths = /apex/com.android.art/${LIB}
 namespace.com_android_art.permitted.paths += /system/${LIB}

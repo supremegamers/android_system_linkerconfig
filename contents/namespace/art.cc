@@ -27,13 +27,11 @@ namespace linkerconfig {
 namespace contents {
 
 Namespace BuildArtNamespace([[maybe_unused]] const Context& ctx,
-                            [[maybe_unused]] const ApexInfo& apex) {
-  // Make the namespace visible to allow links to be created at runtime, e.g.
-  // through android_link_namespaces in libnativeloader. That is not applicable
-  // to the vendor section.
+                            [[maybe_unused]] const ApexInfo& apex,
+                            bool visible) {
   Namespace ns(apex.namespace_name,
                /*is_isolated=*/true,
-               /*is_visible=*/!ctx.IsVendorSection());
+               /*is_visible=*/visible);
   InitializeWithApex(ns, apex);
 
   return ns;
