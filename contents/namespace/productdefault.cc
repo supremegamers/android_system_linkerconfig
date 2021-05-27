@@ -43,6 +43,8 @@ Namespace BuildProductDefaultNamespace([[maybe_unused]] const Context& ctx) {
   ns.AddRequires(std::vector{
       "libneuralnetworks.so",
   });
+  ns.AddRequires(ctx.GetProductRequireLibs());
+  ns.AddProvides(ctx.GetProductProvideLibs());
   return ns;
 }
 }  // namespace contents
