@@ -8,5 +8,8 @@
     "libdl.so",
     "liblog.so",
     "libm.so"
+  ],
+  "provideNativeLibs": [
+    "libtest.so"
   ]
 }
