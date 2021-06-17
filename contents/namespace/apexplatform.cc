@@ -38,7 +38,11 @@ Namespace BuildApexPlatformNamespace([[maybe_unused]] const Context& ctx) {
   if (!IsProductVndkVersionDefined()) {
     ns.AddSearchPath(Var("PRODUCT") + "/${LIB}");
   }
-  ns.AddPermittedPath("/apex/com.android.runtime/${LIB}/bionic");
+
+  const std::vector<std::string> permitted_paths = GetSystemPermittedPaths();
+  for (const auto& path : permitted_paths) {
+    ns.AddPermittedPath(path);
+  }
 
   ns.AddProvides(ctx.GetSystemProvideLibs());
   ns.AddRequires(ctx.GetSystemRequireLibs());
