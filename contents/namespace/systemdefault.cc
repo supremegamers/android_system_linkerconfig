@@ -28,6 +28,53 @@ using android::linkerconfig::modules::Namespace;
 namespace android {
 namespace linkerconfig {
 namespace contents {
+
+const std::vector<std::string> GetSystemPermittedPaths() {
+  std::string product = Var("PRODUCT");
+  std::string system_ext = Var("SYSTEM_EXT");
+
+  // We can't have entire /system/${LIB} as permitted paths because doing so
+  // makes it possible to load libs in /system/${LIB}/vndk* directories by
+  // their absolute paths, e.g. dlopen("/system/lib/vndk/libbase.so"). VNDK
+  // libs are built with previous versions of Android and thus must not be
+  // loaded into this namespace where libs built with the current version of
+  // Android are loaded. Mixing the two types of libs in the same namespace
+  // can cause unexpected problems.
+  return {
+      "/system/${LIB}/drm",
+      "/system/${LIB}/extractors",
+      "/system/${LIB}/hw",
+      system_ext + "/${LIB}",
+
+      // These are where odex files are located. libart has to be able to dlopen
+      // the files
+      "/system/framework",
+
+      "/system/app",
+      "/system/priv-app",
+      system_ext + "/framework",
+      system_ext + "/app",
+      system_ext + "/priv-app",
+      "/vendor/framework",
+      "/vendor/app",
+      "/vendor/priv-app",
+      "/system/vendor/framework",
+      "/system/vendor/app",
+      "/system/vendor/priv-app",
+      "/odm/framework",
+      "/odm/app",
+      "/odm/priv-app",
+      "/oem/app",
+      product + "/framework",
+      product + "/app",
+      product + "/priv-app",
+      "/data",
+      "/mnt/expand",
+      "/apex/com.android.runtime/${LIB}/bionic",
+      "/system/${LIB}/bootstrap",
+  };
+}
+
 Namespace BuildSystemDefaultNamespace([[maybe_unused]] const Context& ctx) {
   bool is_fully_treblelized = ctx.IsDefaultConfig();
   std::string product = Var("PRODUCT");
@@ -52,46 +99,7 @@ Namespace BuildSystemDefaultNamespace([[maybe_unused]] const Context& ctx) {
   }
 
   if (is_fully_treblelized) {
-    // We can't have entire /system/${LIB} as permitted paths because doing so
-    // makes it possible to load libs in /system/${LIB}/vndk* directories by
-    // their absolute paths, e.g. dlopen("/system/lib/vndk/libbase.so"). VNDK
-    // libs are built with previous versions of Android and thus must not be
-    // loaded into this namespace where libs built with the current version of
-    // Android are loaded. Mixing the two types of libs in the same namespace
-    // can cause unexpected problems.
-    const std::vector<std::string> permitted_paths = {
-        "/system/${LIB}/drm",
-        "/system/${LIB}/extractors",
-        "/system/${LIB}/hw",
-        system_ext + "/${LIB}",
-
-        // These are where odex files are located. libart has to be able to
-        // dlopen the files
-        "/system/framework",
-
-        "/system/app",
-        "/system/priv-app",
-        system_ext + "/framework",
-        system_ext + "/app",
-        system_ext + "/priv-app",
-        "/vendor/framework",
-        "/vendor/app",
-        "/vendor/priv-app",
-        "/system/vendor/framework",
-        "/system/vendor/app",
-        "/system/vendor/priv-app",
-        "/odm/framework",
-        "/odm/app",
-        "/odm/priv-app",
-        "/oem/app",
-        product + "/framework",
-        product + "/app",
-        product + "/priv-app",
-        "/data",
-        "/mnt/expand",
-        "/apex/com.android.runtime/${LIB}/bionic",
-        "/system/${LIB}/bootstrap"};
-
+    const std::vector<std::string> permitted_paths = GetSystemPermittedPaths();
     for (const auto& path : permitted_paths) {
       ns.AddPermittedPath(path);
     }
@@ -105,6 +113,7 @@ Namespace BuildSystemDefaultNamespace([[maybe_unused]] const Context& ctx) {
   ns.AddProvides(ctx.GetSystemProvideLibs());
   return ns;
 }
+
 }  // namespace contents
 }  // namespace linkerconfig
 }  // namespace android
