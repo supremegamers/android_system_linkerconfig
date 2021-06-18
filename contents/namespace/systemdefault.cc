@@ -29,7 +29,7 @@ namespace android {
 namespace linkerconfig {
 namespace contents {
 
-const std::vector<std::string> GetSystemPermittedPaths() {
+void SetupSystemPermittedPaths(Namespace* ns) {
   std::string product = Var("PRODUCT");
   std::string system_ext = Var("SYSTEM_EXT");
 
@@ -40,7 +40,7 @@ const std::vector<std::string> GetSystemPermittedPaths() {
   // loaded into this namespace where libs built with the current version of
   // Android are loaded. Mixing the two types of libs in the same namespace
   // can cause unexpected problems.
-  return {
+  const std::vector<std::string> permitted_paths = {
       "/system/${LIB}/drm",
       "/system/${LIB}/extractors",
       "/system/${LIB}/hw",
@@ -73,6 +73,14 @@ const std::vector<std::string> GetSystemPermittedPaths() {
       "/apex/com.android.runtime/${LIB}/bionic",
       "/system/${LIB}/bootstrap",
   };
+
+  for (const std::string& path : permitted_paths) {
+    ns->AddPermittedPath(path);
+  }
+  if (!IsProductVndkVersionDefined()) {
+    // System processes can use product libs only if product VNDK is not enforced.
+    ns->AddPermittedPath(product + "/${LIB}");
+  }
 }
 
 Namespace BuildSystemDefaultNamespace([[maybe_unused]] const Context& ctx) {
@@ -99,14 +107,7 @@ Namespace BuildSystemDefaultNamespace([[maybe_unused]] const Context& ctx) {
   }
 
   if (is_fully_treblelized) {
-    const std::vector<std::string> permitted_paths = GetSystemPermittedPaths();
-    for (const auto& path : permitted_paths) {
-      ns.AddPermittedPath(path);
-    }
-    if (!IsProductVndkVersionDefined()) {
-      // System processes can use product libs only if product VNDK is not enforced.
-      ns.AddPermittedPath(product + "/${LIB}");
-    }
+    SetupSystemPermittedPaths(&ns);
   }
 
   ns.AddRequires(ctx.GetSystemRequireLibs());

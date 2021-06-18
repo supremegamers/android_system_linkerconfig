@@ -31,7 +31,7 @@ namespace contents {
 // libdl.so) and applicable libclang_rt.*.
 void AddStandardSystemLinks(const Context& ctx, modules::Section* section);
 
-const std::vector<std::string> GetSystemPermittedPaths();
+void SetupSystemPermittedPaths(modules::Namespace* ns);
 
 }  // namespace contents
 }  // namespace linkerconfig

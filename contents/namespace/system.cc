@@ -35,6 +35,8 @@ Namespace BuildSystemNamespace([[maybe_unused]] const Context& ctx) {
     ns.AddSearchPath(Var("PRODUCT") + "/${LIB}");
   }
 
+  SetupSystemPermittedPaths(&ns);
+
   ns.AddRequires(ctx.GetSystemRequireLibs());
   ns.AddProvides(ctx.GetSystemProvideLibs());
   return ns;

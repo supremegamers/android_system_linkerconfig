@@ -39,10 +39,7 @@ Namespace BuildApexPlatformNamespace([[maybe_unused]] const Context& ctx) {
     ns.AddSearchPath(Var("PRODUCT") + "/${LIB}");
   }
 
-  const std::vector<std::string> permitted_paths = GetSystemPermittedPaths();
-  for (const auto& path : permitted_paths) {
-    ns.AddPermittedPath(path);
-  }
+  SetupSystemPermittedPaths(&ns);
 
   ns.AddProvides(ctx.GetSystemProvideLibs());
   ns.AddRequires(ctx.GetSystemRequireLibs());
