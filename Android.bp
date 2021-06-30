@@ -247,7 +247,6 @@ sh_test_host {
     name: "linkerconfig_diff_test",
     src: "rundiff.sh",
     filename: "linkerconfig_diff_test.sh",
-    test_suites: ["general-tests"],
     test_config: "linkerconfig_diff_test.xml",
     data: [
         "testdata/**/*",
@@ -257,4 +256,7 @@ sh_test_host {
         // ":linkerconfig",
         ":linkerconfig_diff_test_host_tools",
     ],
+    test_options: {
+        unit_test: true,
+    },
 }
