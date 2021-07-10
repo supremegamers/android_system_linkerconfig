@@ -79,14 +79,12 @@ Section BuildApexDefaultSection(Context& ctx, const ApexInfo& apex_info) {
   // and Product APEXes can use libs provided by "product"
   if (ctx.IsVndkAvailable()) {
     if (apex_info.InVendor()) {
-      auto vendor = BuildVendorDefaultNamespace(ctx);
-      vendor.Rename("vendor");
+      auto vendor = BuildVendorNamespace(ctx, "vendor");
       if (!vendor.GetProvides().empty()) {
         namespaces.emplace_back(std::move(vendor));
       }
     } else if (apex_info.InProduct()) {
-      auto product = BuildProductDefaultNamespace(ctx);
-      product.Rename("product");
+      auto product = BuildProductNamespace(ctx, "product");
       if (!product.GetProvides().empty()) {
         namespaces.emplace_back(std::move(product));
       }
