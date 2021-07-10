@@ -25,8 +25,12 @@ using android::linkerconfig::modules::Namespace;
 namespace android {
 namespace linkerconfig {
 namespace contents {
-Namespace BuildProductDefaultNamespace([[maybe_unused]] const Context& ctx) {
-  Namespace ns("default", /*is_isolated=*/true, /*is_visible=*/true);
+Namespace BuildProductDefaultNamespace(const Context& ctx) {
+  return BuildProductNamespace(ctx, "default");
+}
+
+Namespace BuildProductNamespace(const Context& ctx, const std::string& name) {
+  Namespace ns(name, /*is_isolated=*/true, /*is_visible=*/true);
 
   ns.AddSearchPath(Var("PRODUCT", "product") + "/${LIB}");
   ns.AddPermittedPath(Var("PRODUCT", "product"));

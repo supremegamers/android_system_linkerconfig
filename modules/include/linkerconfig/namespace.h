@@ -103,9 +103,6 @@ class Namespace {
   const std::set<std::string>& GetRequires() const {
     return requires_;
   }
-  void Rename(const std::string& name) {
-    name_ = name;
-  }
 
  private:
   bool is_isolated_;
