@@ -62,6 +62,10 @@ function run_linkerconfig_to {
   mkdir -p $1/product-enabled
   linkerconfig -v R -p R -r $TMP_ROOT -t $1/product-enabled
 
+  ./testdata/prepare_root.sh --all --block com.android.art:com.android.vndk.vR --in testdata/root --out $TMP_ROOT
+  mkdir -p $1/guest
+  linkerconfig -v R -p R -r $TMP_ROOT -t $1/guest
+
   rm -iRf $TMP_ROOT/apex/com.android.vndk.vR
   mkdir -p $1/legacy
   linkerconfig -r $TMP_ROOT -t $1/legacy
