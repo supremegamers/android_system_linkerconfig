@@ -223,9 +223,7 @@ bool ApexInfo::InSystem() const {
   return StartsWith(original_path, "/system/apex/") ||
          StartsWith(original_path, "/system_ext/apex/") ||
          (!IsProductVndkVersionDefined() &&
-          StartsWith(original_path, "/product/apex/")) ||
-         // Guest mode Android may have system APEXes from host via block APEXes
-         StartsWith(original_path, "/dev/block/vd");
+          StartsWith(original_path, "/product/apex/"));
 }
 
 bool ApexInfo::InProduct() const {
