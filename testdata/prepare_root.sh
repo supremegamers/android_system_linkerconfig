@@ -20,10 +20,9 @@ bootstrap=
 all=
 in=
 out=
-block_apexes=
 
 function usage() {
-  echo "usage: $0 [--bootstrap|--all] [--block apexes(colol-separated)] --in in --out out" && exit 1
+  echo "usage: $0 [--bootstrap|--all] --in in --out out" && exit 1
 }
 
 while [[ $# -gt 0 ]]; do
@@ -34,11 +33,6 @@ while [[ $# -gt 0 ]]; do
       ;;
     --all)
       all=yes
-      shift
-      ;;
-    --block)
-      block_apexes=$2
-      shift
       shift
       ;;
     --in)
@@ -105,7 +99,6 @@ for partition in system vendor product; do
   fi
 done
 
-blockIndex=1
 apexInfo=$ROOT_OUT/apex/apex-info-list.xml
 echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>" > $apexInfo
 echo "<apex-info-list>" > $apexInfo
@@ -115,12 +108,8 @@ for partition in system product system_ext vendor; do
     for src in $ROOT_OUT/$partition/apex/*/; do
       name=$(basename $src)
       dst=$ROOT_OUT/apex/$name
-      module_path=/$(realpath --relative-to=$ROOT_OUT $src)
-      # simulate block apexes are activated from /dev/block/vdaN
-      if [[ "$block_apexes" == *"$name"* ]]; then
-        module_path=/dev/block/vda$blockIndex
-        ((blockIndex=blockIndex+1))
-      fi
+      preinstalled_path=/$(realpath --relative-to=$ROOT_OUT $src)
+      module_path=/$(realpath --relative-to=$ROOT_OUT $dst)
       if [ $(get_level $name) -le $activate_level ]; then
         cp -r $src $dst
         conv_apex_manifest proto $dst/apex_manifest.json -o $dst/apex_manifest.pb
@@ -128,7 +117,9 @@ for partition in system product system_ext vendor; do
           conv_linker_config proto -s $dst/etc/linker.config.json -o $dst/etc/linker.config.pb
         fi
         mkdir $dst/lib
-        echo " <apex-info moduleName=\"$name\" modulePath=\"$module_path\" preinstalledModulePath=\"$module_path\" isFactory=\"true\" isActive=\"true\" />" >> $apexInfo
+        echo " <apex-info moduleName=\"$name\" modulePath=\"$module_path\" preinstalledModulePath=\"$preinstalled_path\" isFactory=\"true\" isActive=\"true\" />" >> $apexInfo
+      else
+        echo " <apex-info moduleName=\"$name\" preinstalledModulePath=\"$preinstalled_path\" isFactory=\"true\" isActive=\"false\" />" >> $apexInfo
       fi
     done
   fi
