@@ -21,5 +21,10 @@
     {
       "name": "GtsLinkerConfigTestCases"
     }
+  ],
+  "imports": [
+    {
+      "path": "packages/modules/Virtualization"
+    }
   ]
 }
