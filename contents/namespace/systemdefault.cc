@@ -91,7 +91,10 @@ Namespace BuildSystemDefaultNamespace([[maybe_unused]] const Context& ctx) {
         "/data",
         "/mnt/expand",
         "/apex/com.android.runtime/${LIB}/bionic",
-        "/system/${LIB}/bootstrap"};
+        "/system/${LIB}/bootstrap",
+        "/vendor/${LIB}",
+        "/vendor/${LIB}/arm",
+        "/vendor/${LIB}/arm/nb"};
 
     for (const auto& path : permitted_paths) {
       ns.AddPermittedPath(path, AsanPath::SAME_PATH);
