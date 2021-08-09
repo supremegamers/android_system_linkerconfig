@@ -40,6 +40,20 @@ function activate() {
   cp -r ./testdata/root/apex/$2 $1/apex
 }
 
+# add library names to system/etc/vndkcorevariant.libraries.txt
+# $1: test root
+# $2: list of vndk using core variant libs. ex) a.so:b.so:c.so
+function configure_vndk_core_variant_libs {
+  _vndkcorevariant_libraries_txt=$1/system/etc/vndkcorevariant.libraries.txt
+  rm -rf $_vndkcorevariant_libraries_txt
+  IFS=':'
+  for lib in $2; do
+    echo $lib >> $_vndkcorevariant_libraries_txt
+  done
+  _vndkcorevariant_libraries_txt=
+  unset IFS
+}
+
 # $1: target output directory
 function run_linkerconfig_to {
   # delete old output
@@ -61,6 +75,10 @@ function run_linkerconfig_to {
 
   mkdir -p $1/product-enabled
   linkerconfig -v R -p R -r $TMP_ROOT -t $1/product-enabled
+
+  mkdir -p $1/vndk-in-system
+  configure_vndk_core_variant_libs $TMP_ROOT libevent.so:libexif.so:libfmq.so
+  linkerconfig -v R -p R -r $TMP_ROOT -t $1/vndk-in-system
 
   ./testdata/prepare_root.sh --all --block com.android.art:com.android.vndk.vR --in testdata/root --out $TMP_ROOT
   mkdir -p $1/guest
