@@ -38,11 +38,16 @@ Namespace BuildProductNamespace(const Context& ctx, const std::string& name) {
   ns.GetLink(ctx.GetSystemNamespaceName())
       .AddSharedLib(
           {Var("LLNDK_LIBRARIES_PRODUCT"), Var("SANITIZER_DEFAULT_PRODUCT")});
-  ns.GetLink("vndk").AddSharedLib({Var("VNDK_SAMEPROCESS_LIBRARIES_PRODUCT"),
-                                   Var("VNDK_CORE_LIBRARIES_PRODUCT")});
-  if (android::linkerconfig::modules::IsVndkInSystemNamespace()) {
-    ns.GetLink("vndk_in_system")
-        .AddSharedLib(Var("VNDK_USING_CORE_VARIANT_LIBRARIES"));
+  if (ctx.IsSystemSection() || ctx.IsUnrestrictedSection()) {
+    ns.GetLink("vndk_product")
+        .AddSharedLib(Var("VNDK_SAMEPROCESS_LIBRARIES_PRODUCT"));
+  } else {
+    ns.GetLink("vndk").AddSharedLib({Var("VNDK_SAMEPROCESS_LIBRARIES_PRODUCT"),
+                                     Var("VNDK_CORE_LIBRARIES_PRODUCT")});
+    if (android::linkerconfig::modules::IsVndkInSystemNamespace()) {
+      ns.GetLink("vndk_in_system")
+          .AddSharedLib(Var("VNDK_USING_CORE_VARIANT_LIBRARIES"));
+    }
   }
   ns.AddRequires(std::vector{
       "libneuralnetworks.so",
