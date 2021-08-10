@@ -20,6 +20,7 @@
 #include <vector>
 
 #include "linkerconfig/common.h"
+#include "linkerconfig/environment.h"
 #include "linkerconfig/log.h"
 #include "linkerconfig/namespacebuilder.h"
 #include "linkerconfig/section.h"
@@ -82,11 +83,17 @@ Section BuildApexDefaultSection(Context& ctx, const ApexInfo& apex_info) {
       auto vendor = BuildVendorNamespace(ctx, "vendor");
       if (!vendor.GetProvides().empty()) {
         namespaces.emplace_back(std::move(vendor));
+        if (android::linkerconfig::modules::IsVndkInSystemNamespace()) {
+          namespaces.emplace_back(BuildVndkInSystemNamespace(ctx));
+        }
       }
     } else if (apex_info.InProduct()) {
       auto product = BuildProductNamespace(ctx, "product");
       if (!product.GetProvides().empty()) {
         namespaces.emplace_back(std::move(product));
+        if (android::linkerconfig::modules::IsVndkInSystemNamespace()) {
+          namespaces.emplace_back(BuildVndkInSystemNamespace(ctx));
+        }
       }
     }
   }
