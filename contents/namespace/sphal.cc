@@ -58,6 +58,9 @@ Namespace BuildSphalNamespace([[maybe_unused]] const Context& ctx) {
     }
   }
 
+  ns.AddSearchPath("/vendor/${LIB}/arm");
+  ns.AddPermittedPath("/vendor/${LIB}/arm");
+  ns.AddSearchPath("/vendor/${LIB}/arm/nb");
   if (ctx.IsApexBinaryConfig() && !ctx.IsVndkAvailable()) {
     // If device is legacy, let Sphal libraries access to system lib path for
     // VNDK-SP libraries
