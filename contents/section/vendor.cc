@@ -37,6 +37,7 @@ Section BuildVendorSection(Context& ctx) {
   namespaces.emplace_back(BuildVendorDefaultNamespace(ctx));
   namespaces.emplace_back(BuildVndkNamespace(ctx, VndkUserPartition::Vendor));
   namespaces.emplace_back(BuildSystemNamespace(ctx));
+  namespaces.emplace_back(BuildRsNamespace(ctx));
 
   if (android::linkerconfig::modules::IsVndkInSystemNamespace()) {
     namespaces.emplace_back(BuildVndkInSystemNamespace(ctx));
