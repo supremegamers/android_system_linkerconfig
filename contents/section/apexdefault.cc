@@ -83,6 +83,7 @@ Section BuildApexDefaultSection(Context& ctx, const ApexInfo& apex_info) {
       auto vendor = BuildVendorNamespace(ctx, "vendor");
       if (!vendor.GetProvides().empty()) {
         namespaces.emplace_back(std::move(vendor));
+        namespaces.emplace_back(BuildRsNamespace(ctx));
         if (android::linkerconfig::modules::IsVndkInSystemNamespace()) {
           namespaces.emplace_back(BuildVndkInSystemNamespace(ctx));
         }

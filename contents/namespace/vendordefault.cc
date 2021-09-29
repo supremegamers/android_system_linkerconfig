@@ -22,7 +22,6 @@
 #include "linkerconfig/common.h"
 #include "linkerconfig/environment.h"
 
-using android::linkerconfig::modules::GetVendorVndkVersion;
 using android::linkerconfig::modules::Namespace;
 
 namespace android {
@@ -45,6 +44,7 @@ Namespace BuildVendorNamespace([[maybe_unused]] const Context& ctx,
   ns.AddPermittedPath("/vendor");
   ns.AddPermittedPath("/system/vendor");
 
+  ns.GetLink("rs").AddSharedLib("libRS_internal.so");
   ns.GetLink(ctx.GetSystemNamespaceName())
       .AddSharedLib(
           {Var("LLNDK_LIBRARIES_VENDOR"), Var("SANITIZER_DEFAULT_VENDOR")});
