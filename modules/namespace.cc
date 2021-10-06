@@ -18,8 +18,6 @@
 
 #include <android-base/strings.h>
 
-#include <algorithm>
-
 #include "linkerconfig/apex.h"
 #include "linkerconfig/log.h"
 
