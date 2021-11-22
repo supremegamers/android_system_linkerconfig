@@ -44,15 +44,17 @@ Namespace BuildVendorNamespace([[maybe_unused]] const Context& ctx,
   ns.AddPermittedPath("/vendor");
   ns.AddPermittedPath("/system/vendor");
 
-  ns.GetLink("rs").AddSharedLib("libRS_internal.so");
-  ns.GetLink(ctx.GetSystemNamespaceName())
-      .AddSharedLib(
-          {Var("LLNDK_LIBRARIES_VENDOR"), Var("SANITIZER_DEFAULT_VENDOR")});
-  ns.GetLink("vndk").AddSharedLib({Var("VNDK_SAMEPROCESS_LIBRARIES_VENDOR"),
-                                   Var("VNDK_CORE_LIBRARIES_VENDOR")});
-  if (android::linkerconfig::modules::IsVndkInSystemNamespace()) {
-    ns.GetLink("vndk_in_system")
-        .AddSharedLib(Var("VNDK_USING_CORE_VARIANT_LIBRARIES"));
+  if (ctx.IsVndkAvailable()) {
+    ns.GetLink("rs").AddSharedLib("libRS_internal.so");
+    ns.GetLink(ctx.GetSystemNamespaceName())
+        .AddSharedLib(
+            {Var("LLNDK_LIBRARIES_VENDOR"), Var("SANITIZER_DEFAULT_VENDOR")});
+    ns.GetLink("vndk").AddSharedLib({Var("VNDK_SAMEPROCESS_LIBRARIES_VENDOR"),
+                                     Var("VNDK_CORE_LIBRARIES_VENDOR")});
+    if (android::linkerconfig::modules::IsVndkInSystemNamespace()) {
+      ns.GetLink("vndk_in_system")
+          .AddSharedLib(Var("VNDK_USING_CORE_VARIANT_LIBRARIES"));
+    }
   }
 
   ns.AddRequires(std::vector{"libneuralnetworks.so"});
