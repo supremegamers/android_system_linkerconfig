@@ -80,10 +80,10 @@ Section BuildApexDefaultSection(Context& ctx, const ApexInfo& apex_info) {
   // and Product APEXes can use libs provided by "product"
   if (ctx.IsVndkAvailable()) {
     if (apex_info.InVendor()) {
+      namespaces.emplace_back(BuildRsNamespace(ctx));
       auto vendor = BuildVendorNamespace(ctx, "vendor");
       if (!vendor.GetProvides().empty()) {
         namespaces.emplace_back(std::move(vendor));
-        namespaces.emplace_back(BuildRsNamespace(ctx));
         if (android::linkerconfig::modules::IsVndkInSystemNamespace()) {
           namespaces.emplace_back(BuildVndkInSystemNamespace(ctx));
         }
@@ -100,11 +100,23 @@ Section BuildApexDefaultSection(Context& ctx, const ApexInfo& apex_info) {
   }
 
   LibProviders libs_providers;
-  libs_providers[":sphal"] = LibProvider{
-      "sphal",
-      std::bind(BuildSphalNamespace, ctx),
-      {},
-  };
+  if (apex_info.InVendor()) {
+    // In Vendor APEX, sphal namespace is not required and possible to cause
+    // same library being loaded from two namespaces (sphal and vendor). As
+    // SPHAL itself is not required from vendor (APEX) section, add vendor
+    // namespace instead.
+    libs_providers[":sphal"] = LibProvider{
+        "vendor",
+        std::bind(BuildVendorNamespace, ctx, "vendor"),
+        {},
+    };
+  } else {
+    libs_providers[":sphal"] = LibProvider{
+        "sphal",
+        std::bind(BuildSphalNamespace, ctx),
+        {},
+    };
+  }
   if (ctx.IsVndkAvailable()) {
     VndkUserPartition user_partition = VndkUserPartition::Vendor;
     std::string user_partition_suffix = "VENDOR";
