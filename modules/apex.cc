@@ -50,7 +50,7 @@ bool PathExists(const std::string& path) {
 
 Result<std::set<std::string>> ReadPublicLibraries(const std::string& filepath) {
   std::string file_content;
-  if (!android::base::ReadFileToString(filepath, &file_content)) {
+  if (!android::base::ReadFileToString(filepath, &file_content, true)) {
     return ErrnoError();
   }
   std::vector<std::string> lines = android::base::Split(file_content, "\n");
