@@ -84,17 +84,24 @@ Section BuildApexDefaultSection(Context& ctx, const ApexInfo& apex_info) {
       auto vendor = BuildVendorNamespace(ctx, "vendor");
       if (!vendor.GetProvides().empty()) {
         namespaces.emplace_back(std::move(vendor));
-        if (android::linkerconfig::modules::IsVndkInSystemNamespace()) {
-          namespaces.emplace_back(BuildVndkInSystemNamespace(ctx));
-        }
+      }
+      if (android::linkerconfig::modules::IsVndkInSystemNamespace()) {
+        namespaces.emplace_back(BuildVndkInSystemNamespace(ctx));
+      } else {
+        namespaces.emplace_back(
+            BuildVndkNamespace(ctx, VndkUserPartition::Vendor));
       }
     } else if (apex_info.InProduct()) {
       auto product = BuildProductNamespace(ctx, "product");
       if (!product.GetProvides().empty()) {
         namespaces.emplace_back(std::move(product));
-        if (android::linkerconfig::modules::IsVndkInSystemNamespace()) {
-          namespaces.emplace_back(BuildVndkInSystemNamespace(ctx));
-        }
+      }
+
+      if (android::linkerconfig::modules::IsVndkInSystemNamespace()) {
+        namespaces.emplace_back(BuildVndkInSystemNamespace(ctx));
+      } else {
+        namespaces.emplace_back(
+            BuildVndkNamespace(ctx, VndkUserPartition::Product));
       }
     }
   }
