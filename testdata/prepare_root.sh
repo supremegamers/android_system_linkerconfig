@@ -99,9 +99,18 @@ mkdir -p $ROOT_OUT
 mkdir -p $ROOT_OUT/apex
 cp -R $ROOT_IN/* $ROOT_OUT
 
-for partition in system vendor product; do
+# convert linker.config.pb in each partition and apex
+for partition in system vendor system_ext product; do
   if test -f $ROOT_OUT/$partition/etc/linker.config.json; then
     conv_linker_config proto -s $ROOT_OUT/$partition/etc/linker.config.json -o $ROOT_OUT/$partition/etc/linker.config.pb
+  fi
+  if [ -d $ROOT_OUT/$partition/apex ]; then
+    for src in $ROOT_OUT/$partition/apex/*; do
+      config=$src/etc/linker.config.json
+      if test -f $config; then
+        conv_linker_config proto -s $config -o ${config%.json}.pb
+      fi
+    done
   fi
 done
 
@@ -113,6 +122,9 @@ echo "<apex-info-list>" > $apexInfo
 for partition in system product system_ext vendor; do
   if [ -d $ROOT_OUT/$partition/apex ]; then
     for src in $ROOT_OUT/$partition/apex/*/; do
+      if test ! -d $src; then
+        continue
+      fi
       name=$(basename $src)
       dst=$ROOT_OUT/apex/$name
       module_path=/$(realpath --relative-to=$ROOT_OUT $src)

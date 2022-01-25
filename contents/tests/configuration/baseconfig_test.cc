@@ -65,7 +65,7 @@ TEST(linkerconfig_configuration_fulltest,
   MockGenericVariables();
   Context ctx;
   ctx.AddApexModule(ApexInfo(
-      "foo", "", {}, {}, {"libjni.so"}, {}, false, true, false, false));
+      "foo", "", {}, {}, {"libjni.so"}, {}, {}, false, true, false, false));
   auto config = CreateBaseConfiguration(ctx);
 
   auto* section = config.GetSection("system");
@@ -96,6 +96,7 @@ TEST(linkerconfig_configuration_fulltest,
                               {":vndk", "libvendorprovide.so"},
                               {},
                               {},
+                              {},
                               false,
                               true,
                               true,
@@ -106,6 +107,7 @@ TEST(linkerconfig_configuration_fulltest,
   // To generate vendor section
   ctx.AddApexModule(ApexInfo("com.android.vndk.v",
                              "/apex/com.android.vndk.v",
+                             {},
                              {},
                              {},
                              {},
