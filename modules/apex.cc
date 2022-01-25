@@ -146,6 +146,7 @@ Result<std::map<std::string, ApexInfo>> ScanActiveApexes(const std::string& root
 
     std::vector<std::string> permitted_paths;
     bool visible = false;
+    std::vector<Contribution> contributions;
 
     std::string linker_config_path = path + "/etc/linker.config.pb";
     if (PathExists(linker_config_path)) {
@@ -163,6 +164,12 @@ Result<std::map<std::string, ApexInfo>> ScanActiveApexes(const std::string& root
           }
         }
         visible = linker_config->visible();
+        for (auto& contribution : linker_config->contributions()) {
+          Contribution c;
+          c.namespace_name = contribution.namespace_();
+          c.paths = {contribution.paths().begin(), contribution.paths().end()};
+          contributions.emplace_back(std::move(c));
+        }
       } else {
         return Error() << "Failed to read APEX linker config : "
                        << linker_config.error();
@@ -177,6 +184,7 @@ Result<std::map<std::string, ApexInfo>> ScanActiveApexes(const std::string& root
                    manifest.requirenativelibs().end()},
                   {manifest.jnilibs().begin(), manifest.jnilibs().end()},
                   std::move(permitted_paths),
+                  std::move(contributions),
                   has_bin,
                   has_lib,
                   visible,
