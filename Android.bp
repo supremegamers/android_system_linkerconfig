@@ -249,8 +249,10 @@ sh_test_host {
     filename: "linkerconfig_diff_test.sh",
     test_config: "linkerconfig_diff_test.xml",
     data: [
-        "testdata/**/*",
-        "testdata/**/.*", // copy .keep files
+        "testdata/root/**/*",
+        "testdata/root/**/.*", // copy .keep files
+        "testdata/golden_output/**/*",
+        "testdata/prepare_root.sh",
         // workaround to use host tools(conv_apex_manifest, linkerconfig) on build server
         // ":conv_apex_manifest",
         // ":linkerconfig",
