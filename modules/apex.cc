@@ -198,8 +198,26 @@ Result<std::map<std::string, ApexInfo>> ScanActiveApexes(const std::string& root
         com::android::apex::readApexInfoList(info_list_file.c_str());
     if (info_list.has_value()) {
       for (const auto& info : info_list->getApexInfo()) {
-        apexes[info.getModuleName()].original_path =
-            info.getPreinstalledModulePath();
+        // Get the pre-installed path of the apex. Normally (i.e. in Android),
+        // failing to find the pre-installed path is an assertion failure
+        // because apexd demands that every apex to have a pre-installed one.
+        // However, when this runs in a VM where apexes are seen as virtio block
+        // devices, the situation is different. If the APEX in the host side is
+        // an updated (or staged) one, the block device representing the APEX on
+        // the VM side doesn't have the pre-installed path because the factory
+        // version of the APEX wasn't exported to the VM. Therefore, we use the
+        // module path as original_path when we are running in a VM which can be
+        // guessed by checking if the path is /dev/block/vdN.
+        std::string path;
+        if (info.hasPreinstalledModulePath()) {
+          path = info.getPreinstalledModulePath();
+        } else if (StartsWith(info.getModulePath(), "/dev/block/vd")) {
+          path = info.getModulePath();
+        } else {
+          return Error() << "Failed to determine original path for apex "
+                         << info.getModuleName() << " at " << info_list_file;
+        }
+        apexes[info.getModuleName()].original_path = path;
       }
     } else {
       return ErrnoError() << "Can't read " << info_list_file;
