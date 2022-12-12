@@ -106,6 +106,7 @@ Namespace BuildSystemDefaultNamespace([[maybe_unused]] const Context& ctx) {
   }
   if (!is_fully_treblelized) {
     ns.AddSearchPath("/vendor/${LIB}");
+    ns.AddSearchPath("/vendor/${LIB}/hw");
     ns.AddSearchPath("/odm/${LIB}");
   }
 
