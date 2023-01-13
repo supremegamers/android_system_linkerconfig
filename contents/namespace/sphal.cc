@@ -40,6 +40,8 @@ Namespace BuildSphalNamespace([[maybe_unused]] const Context& ctx) {
   ns.AddSearchPath("/odm/${LIB}");
   ns.AddSearchPath("/vendor/${LIB}");
   ns.AddSearchPath("/vendor/${LIB}/egl");
+  ns.AddPermittedPath("/vendor/${LIB}/egl");
+  ns.AddPermittedPath("/system/vendor/${LIB}/egl");
   ns.AddSearchPath("/vendor/${LIB}/hw");
 
   ns.AddPermittedPath("/odm/${LIB}");
